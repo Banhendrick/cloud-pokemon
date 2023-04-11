@@ -12,9 +12,7 @@ services:
 
     # php
     php:
-        build:
-            context: .
-            dockerfile: ./php/Dockerfile
+        image: banhendrick/php-pokemon:latest
         container_name: php-container
         ports:
             - "9000:9000"
@@ -22,7 +20,7 @@ services:
 
     # mysql
     mysql:
-        image: mysql:8.0.32
+        image: banhendrick/mysql-pokemon:v1
         container_name: mysql-container
         ports:
             - "3306:3306"

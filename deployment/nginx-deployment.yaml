@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
@@ -10,6 +10,9 @@ metadata:
   name: nginx
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nginx
   strategy: {}
   template:
     metadata:
@@ -18,10 +21,18 @@ spec:
         io.kompose.service: nginx
     spec:
       containers:
-      - image: nginx:1.23-alpine-slim
+      - image: nginx:stable-alpine3.17
         name: nginx-container
         ports:
-        - containerPort: 80
-        resources: {}
-      restartPolicy: Always
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /etc/nginx
+          readOnly: true
+          name: nginx-config
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+      restartPolicy: Always 
 status: {}
