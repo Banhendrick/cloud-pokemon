@@ -22,10 +22,7 @@ return static function (ContainerBuilder $containerBuilder)
                     'level' => Logger::DEBUG,
                 ],
                 'database' => [
-                    ##[HY000] [2002] php_network_getaddresses: getaddrinfo for db failed: Temporary failure in name resolution
-                    #'host' => 'db',
-                    #SQLSTATE[HY000] [2002] Connection refused
-                    'host' => 'mysql8-service',
+                    'host' => 'mysql',
                     'port' => '3306',
                     'name' => 'minipokedex',
                     'user' => 'root',
@@ -34,11 +31,11 @@ return static function (ContainerBuilder $containerBuilder)
                 ],
                 'redis' => [
                     'schema' => 'tcp',
-                    'host' => 'redis-service',
+                    'host' => 'redis',
                     'port' => '6379',
                 ],
                 'memcached' => [
-                    'host' => 'memcached-service',
+                    'host' => 'memcached',
                     'port' => 11211,
                 ],
             ]);

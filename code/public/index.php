@@ -37,12 +37,6 @@ $container = $containerBuilder->build();
 // Instantiate the app
 AppFactory::setContainer($container);
 $app = AppFactory::create();
-#añadi esto para solucionar :
-#"statusCode": 405
-#"error":{ 
-#“type”: “NOT_ALLOWED”,
-#“description”: “Method not allowed. Must be one of: OPTIONS”}
-#$app->setBasePath("/Slim/App");
 $callableResolver = $app->getCallableResolver();
 
 // Register middleware

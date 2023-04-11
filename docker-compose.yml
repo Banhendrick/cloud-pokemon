@@ -1,12 +1,10 @@
-version: '3.8'
+version: '3'
 #como colocar bien los volumes?
-networks:
-    local-network:
 
 services:
 
     # nginx
-    nginx-service:
+    nginx:
         image: nginx:1.23-alpine-slim
         container_name: nginx-container
         ports:
@@ -20,11 +18,9 @@ services:
             - mysql8-service
             - memcached-service
             - redis-service
-        networks:
-            - local-network
 
     # php
-    php81-service:
+    php:
         build:
             context: .
             dockerfile: ./php/Dockerfile
@@ -38,7 +34,7 @@ services:
             - local-network
 
     # mysql
-    mysql8-service:
+    mysql:
         image: mysql:8.0.32
         container_name: mysql-container
         ports:
@@ -55,7 +51,7 @@ services:
             - local-network
 
     # memcached
-    memcached-service:
+    memcached:
         image: memcached:1.6.19
         container_name: memcached-container
         ports:
@@ -65,7 +61,7 @@ services:
             - local-network
 
     #redis
-    redis-service:
+    redis:
         image: redis:7.0.10
         container_name: redis-container
         ports:
