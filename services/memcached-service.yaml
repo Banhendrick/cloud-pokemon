@@ -9,11 +9,11 @@ metadata:
     io.kompose.service: memcached
   name: memcached
 spec:
+  type: LoadBalancer
   ports:
   - name: "11211"
     port: 11211
     targetPort: 11211
   selector:
     io.kompose.service: memcached
-status:
-  loadBalancer: {}
+

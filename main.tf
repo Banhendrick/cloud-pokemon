@@ -20,7 +20,7 @@ module "gke" {
       name                      = "default-node-pool"
       machine_type              = "e2-micro"
       min_count                 = 1
-      max_count                 = 20
+      max_count                 = 10
       local_ssd_count           = 0
       spot                      = false
       disk_size_gb              = 30

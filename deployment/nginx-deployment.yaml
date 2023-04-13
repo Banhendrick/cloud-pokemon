@@ -1,3 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    http {
+      server{
+        listen 80;
+        index index.php;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        error_log /var/log/nginx/project_error.log;
+        access_log /var/log/nginx/project_access.log;
+
+        location / {
+          try_files $uri /index.php$is_args$args;
+        }
+
+        location ~ ^/index\.php(/|$) {
+
+          fastcgi_pass php:9000;
+          fastcgi_split_path_info ^(.+\.php)(/.*)$;
+          include fastcgi_params;
+
+          fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+          fastcgi_param DOCUMENT_ROOT $realpath_root;
+
+          internal;
+        }
+
+        location ~ \.php$ {
+          return 404;
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: code-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: code-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /home/esteban_garcia/cloud-pokemon/code
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,19 +81,23 @@ spec:
       labels:
         io.kompose.service: nginx
     spec:
+      volumes:
+      - name: code-volume
+        persistentVolumeClaim:
+          claimName: code-pvc
+      - name: nginx-config
+        configMap:
+          name: nginx-config
       containers:
-      - image: nginx:stable-alpine3.17
+      - image: nginx:1.23-alpine-slim
         name: nginx-container
         ports:
         - containerPort: 8080
         volumeMounts:
-        - mountPath: /etc/nginx
-          readOnly: true
-          name: nginx-config
-      volumes:
-      - name: nginx-config
-        configMap:
-          name: nginx-config
-
-      restartPolicy: Always 
+          - name: code-volume
+            mountPath: /usr/share/nginx/html
+          - name: nginx-config
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf  
+      restartPolicy: Always
 status: {}
