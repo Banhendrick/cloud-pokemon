@@ -6,14 +6,13 @@ metadata:
     kompose.version: 1.18.0 (06a2e56)
   creationTimestamp: null
   labels:
-    io.kompose.service: memcached
-  name: memcached
+    io.kompose.service: nginx
+  name: nginx
 spec:
   type: LoadBalancer
   ports:
-  - name: "11211"
-    port: 11211
-    targetPort: 11211
+  - name: "8080"
+    port: 8080
+    targetPort: 80
   selector:
-    io.kompose.service: memcached
-
+    io.kompose.service: nginx

@@ -6,14 +6,12 @@ metadata:
     kompose.version: 1.18.0 (06a2e56)
   creationTimestamp: null
   labels:
-    io.kompose.service: nginx
-  name: nginx
+    io.kompose.service: mysql
+  name: mysql
 spec:
-  type: LoadBalancer
   ports:
-  - name: "8080"
-    port: 8080
-    targetPort: 80
+  - name: "3306"
+    port: 3306
+    targetPort: 3306
   selector:
-    io.kompose.service: nginx
-
+    io.kompose.service: mysql

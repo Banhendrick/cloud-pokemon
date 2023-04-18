@@ -10,7 +10,7 @@ module "gke" {
   #agregar rangos de ip para pods y servicios?
   ip_range_pods              = ""
   ip_range_services          = ""
-  http_load_balancing        = false
+  http_load_balancing        = true
   network_policy             = false
   horizontal_pod_autoscaling = true
   filestore_csi_driver       = false
@@ -18,7 +18,7 @@ module "gke" {
   node_pools = [
     {
       name                      = "default-node-pool"
-      machine_type              = "e2-micro"
+      machine_type              = "e2-medium"
       min_count                 = 1
       max_count                 = 20
       local_ssd_count           = 0
@@ -30,7 +30,6 @@ module "gke" {
       enable_gvnic              = false
       auto_repair               = true
       auto_upgrade              = true
-      #automatizar obtencion de esta cuenta en proceso de despliegue?
       service_account           = var.gke_service_account
       preemptible               = false
       initial_node_count        = 1

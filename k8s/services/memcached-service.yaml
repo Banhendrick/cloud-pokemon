@@ -6,14 +6,12 @@ metadata:
     kompose.version: 1.18.0 (06a2e56)
   creationTimestamp: null
   labels:
-    io.kompose.service: mysql
-  name: mysql
+    io.kompose.service: memcached
+  name: memcached
 spec:
-  type: LoadBalancer
   ports:
-  - name: "3306"
-    port: 3306
-    targetPort: 3306
+  - name: "11211"
+    port: 11211
+    targetPort: 11211
   selector:
-    io.kompose.service: mysql
-
+    io.kompose.service: memcached

@@ -4,18 +4,10 @@ services:
 
     # nginx
     nginx:
-        image: nginx:1.23-alpine-slim
+        image: banhendrick/nginx-php-pokemon:latest
         container_name: nginx-container
         ports:
             - "8080:80"
-        restart: always
-
-    # php
-    php:
-        image: banhendrick/php-pokemon:latest
-        container_name: php-container
-        ports:
-            - "9000:9000"
         restart: always
 
     # mysql

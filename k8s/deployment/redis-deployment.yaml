@@ -6,28 +6,25 @@ metadata:
     kompose.version: 1.18.0 (06a2e56)
   creationTimestamp: null
   labels:
-    io.kompose.service: mysql
-  name: mysql
+    io.kompose.service: redis
+  name: redis
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: mysql
+      io.kompose.service: redis
+  replicas: 1
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: mysql
+        io.kompose.service: redis
     spec:
       containers:
-      - env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: root
-        image: banhendrick/mysql-pokemon:v1
-        name: mysql-container
+      - image: redis:7.0.10
+        name: redis-container
         ports:
-        - containerPort: 3306
+        - containerPort: 6379
         resources: {}
       restartPolicy: Always
 status: {}
