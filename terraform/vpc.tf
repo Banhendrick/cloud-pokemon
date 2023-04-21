@@ -9,14 +9,3 @@ resource "google_compute_subnetwork" "pokemon_subnetwork" {
   region        = var.gcp_region
   network       = google_compute_network.pokemon_network.id
 }
-
-resource "google_compute_firewall" "allow-ssh" {
-  name    = var.gke_firewall
-  project = var.gcp_project_id
-  network = google_compute_network.pokemon_network.name
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-  source_ranges = ["0.0.0.0/0"]
-}
