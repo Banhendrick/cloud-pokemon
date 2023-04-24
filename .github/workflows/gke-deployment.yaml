@@ -14,14 +14,32 @@ env:
 
 jobs:
   setup-build-publish-deploy:
-    name: Build, Publish, and Deploy
+    name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: production
+
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.GKE_PROJECT }}
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        export_default_credentials: true
+
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
     - run: |-
         gcloud --quiet auth configure-docker
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: 'google-github-actions/get-gke-credentials@v1'
+      with:
+        project_id: ${{ secrets.GKE_PROJECT }}
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
 
     # Build the Docker image
     - name: Build
