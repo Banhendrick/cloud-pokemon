@@ -14,10 +14,9 @@ env:
 
 jobs:
   setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
+    name: Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: production
-
     steps:
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
