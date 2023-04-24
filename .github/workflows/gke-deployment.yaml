@@ -26,7 +26,7 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         #workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-        service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+        service_account: 'tf-gke-gke-pokemon-ixh6@fc-labs-pro-lab2.iam.gserviceaccount.com'
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@1bee7de035d65ec5da40a31f8589e240eba8fde5
