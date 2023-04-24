@@ -22,7 +22,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    # Setup gcloud CLI otra sa
+    # Setup gcloud CLI otra sa 2
     - uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: ${{ secrets.GKE_PROJECT }}
