@@ -9,5 +9,5 @@ steps:
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1'
   - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
-  options:
-  logging: CLOUD_LOGGING_ONLY
+- options:
+    logging: CLOUD_LOGGING_ONLY
