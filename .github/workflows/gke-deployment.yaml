@@ -5,27 +5,26 @@ on:
     types:
       - published
 
-jobs:
-  setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
+job:
+  job_id:
+    name: Trigger Google Cloud Build
     runs-on: ubuntu-latest
     environment: production
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - id: 'auth'
-      name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        service_account: ${{ secrets.GKE_SA_KEY }}
-        credentials_json:
+    #- id: 'auth'
+    #  name: 'Authenticate to Google Cloud'
+    #  uses: 'google-github-actions/auth@v0'
+    #  with:
+    #    service_account: ${{ secrets.GKE_SA_KEY }}
+    #    credentials_json:
 
     # Setup gcloud CLI otra sa 2
-    - uses: google-github-actions/setup-gcloud@v1
-      with:
-        project_id: ${{ secrets.GKE_PROJECT }}
+    #- uses: google-github-actions/setup-gcloud@v1
+    #  with:
+    #    project_id: ${{ secrets.GKE_PROJECT }}
 
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
@@ -38,7 +37,7 @@ jobs:
         project_id: ${{ secrets.GKE_PROJECT }}
         cluster_name: gke-pokemon
         location: europe-southwest1
-        
+
     # Build the Docker image
     - name: Build
       run: |-
