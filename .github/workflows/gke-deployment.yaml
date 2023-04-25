@@ -21,7 +21,6 @@ jobs:
         with:
             fetch-depth: 0
       
-      # Configure GitHub account
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
