@@ -2,7 +2,7 @@ name: Build and Deploy to GKE
 
 on:
   release:
-    type:
+    types:
       - published
 
 env:
