@@ -1,3 +1,6 @@
+substitutions:
+    _CLOUDSDK_COMPUTE_ZONE: europe-southwest1-a  # default value
+    _CLOUDSDK_CONTAINER_CLUSTER: gke-pokemon     # default value
 steps:
 # build the docker
 - name: 'gcr.io/cloud-builders/docker'
@@ -12,9 +15,12 @@ steps:
   waitFor: ['build-image-pokemon-nginx']
 
 # Deploy the Helm chart to GKE
-- name: 'gcr.io/$PROJECT_ID/cloud-builders-helm'
-  args: ['upgrade', '--install', 'filebeat', '--namespace', 'filebeat', 'stable/filebeat']
-  
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'nginx-chart/templates/deployment.yaml']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+
 options:
   logging: GCS_ONLY
 images:
