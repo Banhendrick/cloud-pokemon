@@ -11,6 +11,17 @@ steps:
   id: 'push-image-to-container-registry'
   waitFor: ['build-image-pokemon-nginx']
 
+# fetch GKE cluster credentials to be used for helm step
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+  - 'KUBECONFIG=/workspace/.kube/config'
+  args: ['cluster-info']
+  id: 'fetch-credentials'
+  waitFor: ['push-image-to-container-registry']
+
+
 # Deploy the Helm chart to GKE
 - name: 'gcr.io/rimusz-lab1/cloud-builders-helm'
   args: ['upgrade', '--install', 'pokemon-nginx', 'nginx-chart', '-f', 'nginx-chart/templates/values.yaml']
@@ -18,7 +29,7 @@ steps:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
   id: 'deploy-nginx-chart'
-  waitFor: ['push-image-to-container-registry']
+  waitFor: ['fetch-credentials']
 
 options:
   logging: GCS_ONLY
