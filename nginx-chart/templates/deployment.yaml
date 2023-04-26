@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   creationTimestamp: null
-  name: {{ .Release.Name }}-nginx
+  name: pokemon-nginx
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
