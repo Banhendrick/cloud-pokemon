@@ -1,45 +1,34 @@
 steps:
 # Build the Docker image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:app', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:$BUILD_ID', '.']
-  id: 'build-image-pokemon-nginx'
+ - name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/helm:${_HELM_VERSION}', '--tag=gcr.io/$PROJECT_ID/helm:latest', '--build-arg', 'HELM_VERSION=v${_HELM_VERSION}', '.' ]
+  #args: ['build', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:app', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:$BUILD_ID', '.']
+  id: 'build-image-helm'
   waitFor: ['-']  # The '-' indicates that this step begins immediately.
 
 # Push the Docker image to Google Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA']
+  args: ['push', 'gcr.io/$PROJECT_ID/helm:$COMMIT_SHA']
   id: 'push-image-to-container-registry'
-  waitFor: ['build-image-pokemon-nginx']
-
-# fetch GKE cluster credentials to be used for helm step
-- name: 'gcr.io/cloud-builders/kubectl'
-  env:
-  - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
-  - 'KUBECONFIG=/workspace/.kube/config'
-  args: ['cluster-info']
-  id: 'fetch-credentials'
-  waitFor: ['push-image-to-container-registry']
-
+  waitFor: ['build-image-helm']
 
 # Deploy the Helm chart to GKE
 - name: 'gcr.io/rimusz-lab1/cloud-builders-helm'
-  args: ['upgrade', '--install', 'pokemon-nginx', 'nginx-chart', '-f', 'nginx-chart/templates/values.yaml']
+  args: ['upgrade', '--install', 'helm', 'nginx-chart', '-f', 'nginx-chart/templates/values.yaml']
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
   id: 'deploy-nginx-chart'
-  waitFor: ['fetch-credentials']
+  waitFor: ['push-image-to-container-registry']
 
 options:
   logging: GCS_ONLY
 
 substitutions:
+  _HELM_VERSION: 3.7.0
   _CLOUDSDK_COMPUTE_ZONE: europe-southwest1-a
   _CLOUDSDK_CONTAINER_CLUSTER: gke-pokemon
 
 images:
-- 'gcr.io/$PROJECT_ID/pokemon-nginx:app'
-- 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA'
-- 'gcr.io/$PROJECT_ID/pokemon-nginx:$BUILD_ID'
-#asd
+  - 'gcr.io/$PROJECT_ID/helm:${_HELM_VERSION}'
+  - 'gcr.io/$PROJECT_ID/helm:latest'
