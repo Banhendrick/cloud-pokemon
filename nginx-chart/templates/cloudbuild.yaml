@@ -31,3 +31,4 @@ images:
 - 'gcr.io/$PROJECT_ID/pokemon-nginx:app'
 - 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA'
 - 'gcr.io/$PROJECT_ID/pokemon-nginx:$BUILD_ID'
+#asd
