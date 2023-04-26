@@ -13,7 +13,7 @@ steps:
   waitFor: ['build-image-helm']
 
 # Deploy the Helm chart to GKE
-- name: 'gcr.io/$PROJECT_ID/helm'
+- name: 'gcr.io/$PROJECT_ID/helm:latest'
   args: ['upgrade', '--install', 'filebeat', '--namespace', 'filebeat', 'stable/filebeat', '-f', 'nginx-chart/templates/values.yaml']
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
