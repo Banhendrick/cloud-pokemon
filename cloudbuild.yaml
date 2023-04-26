@@ -7,20 +7,15 @@ steps:
   args: ['push', 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA']
   id: 'push-image-to-container-registry'
   waitFor: ['build-image-pokemon-nginx']
-- name: 'gcr.io/cloud-builders/gcloud'
+# deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
   args:
-  - 'run'
-  - 'deploy'
-  - 'pokemon-nginx-service'
-  - '--image'
-  - 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA'
-  - '--region'
-  - 'europe-southwest1'
-  - '--platform'
-  - 'managed'
-  - '--allow-unauthenticated'
-  waitFor: ['push-image-to-container-registry']
-  id: 'deploy-to-cloud-run'
+  - run
+  - --filename=nginx-chart/templates/
+  - --image=gcr.io/$PROJECT_ID/pokemon-nginx:app
+  - --location=europe-southwest1
+  - --cluster=gke-pokemon
+  
 options:
   logging: GCS_ONLY
 images:
