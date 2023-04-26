@@ -14,7 +14,7 @@ steps:
 
 # Deploy the Helm chart to GKE
 - name: 'gcr.io/$PROJECT_ID/helm'
-  args: ['upgrade', '--install', 'helm', 'nginx-chart', '-f', 'nginx-chart/templates/values.yaml']
+  args: ['upgrade', '--install', 'filebeat', '--namespace', 'filebeat', 'stable/filebeat', '-f', 'nginx-chart/templates/values.yaml']
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
