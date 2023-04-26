@@ -12,7 +12,7 @@ steps:
   waitFor: ['build-image-pokemon-nginx']
 
 # Deploy the Helm chart to GKE
-- name: gcr.io/$PROJECT_ID/cloud-builders-helm'
+- name: 'gcr.io/rimusz-lab1/cloud-builders-helm'
   args: ['upgrade', '--install', 'pokemon-nginx', 'nginx-chart', '-f', 'nginx-chart/templates/values.yaml']
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
