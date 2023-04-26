@@ -13,7 +13,7 @@ steps:
 
 # Deploy the Helm chart to GKE
 - name: 'gcr.io/cloud-builders/helm'
-  args: ['upgrade', '--install', 'pokemon-nginx', 'nginx-chart', '-f', '../values.yaml']
+  args: ['upgrade', '--install', 'pokemon-nginx', 'nginx-chart', '-f', 'nginx-chart/templates/values.yaml']
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
