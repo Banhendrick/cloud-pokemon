@@ -21,3 +21,5 @@ steps:
 images:
   # Etiqueta la imagen final con el valor $COMMIT_SHA
   - gcr.io/fc-labs-pro-lab2/pokemon-nginx:app
+
+  
