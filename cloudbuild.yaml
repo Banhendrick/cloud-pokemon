@@ -6,20 +6,31 @@ steps:
   # Compila la imagen Docker y la etiqueta con el valor $COMMIT_SHA
   - name: gcr.io/cloud-builders/docker
     args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app', '-f', 'Dockerfile', '.']
-  # Sube la imagen recién creada a Google Container Registry
+  # Sube la imagen de Nginx  recién creada a Google Container Registry
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app']
+  # Compila la imagen Docker de Helm 
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/helm:latest', '-f', 'helm/Dockerfile', '.']
+  # Sube la imagen de Helm recién creada a Google Container Registry
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest']
   # Actualiza el helm release en su clúster de Kubernetes
-  - name: alpine/helm
-    args: ['upgrade', 'pokemon', 'nginx-chart', '--namespace', 'default', '--set', 'image.tag=app']
-    # Especifica la zona y el nombre del clúster de GKE
+  - name: gcr.io/cloud-builders/kubectl
+    args:
+      - 'apply'
+      - '-f'
+      - 'nginx-chart/templates/deployment.yaml'
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
-
-# Imagen a ser creada por la etapa de compilación
+  - name: gcr.io/fc-labs-pro-lab2/helm
+    entrypoint: /bin/sh
+    args: ['-c', 'helm upgrade pokemon nginx-chart --namespace default --set image.tag=app']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
+# Imágenes a ser creadas por la etapa de compilación
 images:
-  # Etiqueta la imagen final con el valor $COMMIT_SHA
   - gcr.io/fc-labs-pro-lab2/pokemon-nginx:app
-
-  
+  - gcr.io/fc-labs-pro-lab2/helm
