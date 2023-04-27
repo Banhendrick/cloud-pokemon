@@ -5,11 +5,11 @@ steps:
     args:
       - '-c'
       - |
-        gcloud auth activate-service-account --key-file=<(gcloud iam service-accounts keys list --iam-account=789404228835@cloudbuild.gserviceaccount.com --format='value(name)') --quiet
+        gcloud auth activate-service-account --key-file=<(gcloud iam service-accounts keys list --iam-account=789404228835@cloudbuild.gserviceaccount.com --format='value(name)') -y
         gcloud auth application-default login
   # Clona el repositorio de GitHub que contiene el código del chart de Helm
   - name: 'gcr.io/cloud-builders/git'
-    id: 'Deploy'
+    id: 'Deploy'    id: 'Deploy'
     args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon.git', 'helm']
     waitFor: [ '-' ]
   # Actualiza el despliegue de Nginx utilizando el chart de Helm
