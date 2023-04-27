@@ -10,7 +10,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app']
   # Actualiza el helm release en su clúster de Kubernetes
-  - name: gcr.io/cloud-builders/helm
+  - name: alpine/helm
     args: ['upgrade', 'pokemon', 'nginx-chart', '--namespace', 'default', '--set', 'image.tag=app']
     # Especifica la zona y el nombre del clúster de GKE
     env:
