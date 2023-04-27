@@ -1,27 +1,29 @@
+# Etapas de compilación
 steps:
-  # Configura la conexión de Kubernetes en Cloud Build
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gcloud auth activate-service-account --key-file=<(gcloud iam service-accounts keys list --iam-account=789404228835@cloudbuild.gserviceaccount.com --format='value(name)') -y
-        gcloud auth application-default login
-  # Clona el repositorio de GitHub que contiene el código del chart de Helm
-  - name: 'gcr.io/cloud-builders/git'
-    id: 'Deploy'
-    args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon.git', 'helm']
-  # Actualiza el despliegue de Nginx utilizando el chart de Helm
-  - name: 'alpine/helm'
-    args: ['upgrade', '--install', 'pokemon', 'nginx-chart', '--namespace', 'default', '-f', 'values.yaml']
+  # Actualiza los submódulos de Git en su proyecto
+  - name: gcr.io/cloud-builders/git
+    args: ['submodule', 'update', '--init']
+  # Compila la imagen Docker y la etiqueta con el valor $COMMIT_SHA
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app', '-f', 'Dockerfile', '.']
+  # Sube la imagen recién creada a Google Container Registry
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app']
+  # Actualiza el helm release en su clúster de Kubernetes
+  - name: gcr.io/cloud-builders/helm
+    args: ['upgrade', 'pokemon', 'nginx-chart', '--namespace', 'default', '--set', 'image.tag=app']
+    # Especifica la zona y el nombre del clúster de GKE
     env:
-      - 'HELM_HOME=/builder/home/.helm'
-  #Implementa la actualizacion en el cluster de GKE
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'deployments', 'create', 'cloudbuild-pokemon', '--config', 'cloudconfig.yaml']
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1'
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
+
+# Imagen a ser creada por la etapa de compilación
+images:
+  # Etiqueta la imagen final con el valor $COMMIT_SHA
+  - gcr.io/fc-labs-pro-lab2/pokemon-nginx:app
+
+
+
 
 
 
