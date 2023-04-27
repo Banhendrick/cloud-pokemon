@@ -1,4 +1,11 @@
 steps:
+    # Instala el complemento gke-gcloud-auth-plugin
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'gcloud'
+    args:
+      - 'components'
+      - 'install'
+      - 'gke-gcloud-auth-plugin'
   # Configura la conexión de Kubernetes en Cloud Build
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
