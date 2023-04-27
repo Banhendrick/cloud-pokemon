@@ -2,14 +2,13 @@ steps:
   # Clona el repositorio de GitHub que contiene el código del chart de Helm
   - name: 'gcr.io/cloud-builders/git'
     id: 'Deploy'
-    args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon.git', 'Banhendrick']
+    args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon.git', 'helm']
     waitFor: [ '-' ]
   # Actualiza el despliegue de Nginx utilizando el chart de Helm
   - name: 'alpine/helm'
-    args: ['upgrade', 'pokemon', './nginx-chart', '--set', 'app', '--set', 'replicaCount=1', '--install']
+    args: ['upgrade', '--install', 'pokemon', 'nginx-chart', '--namespace', 'default', '-f', 'values.yaml']
     env:
       - 'HELM_HOME=/builder/home/.helm'
-      - 'KUBECONFIG=/workspace/.kube/config'
   #Implementa la actualizacion en el cluster de GKE
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['beta', 'deployments', 'create', 'cloudbuild-pokemon', '--config', 'cloudconfig.yaml']
