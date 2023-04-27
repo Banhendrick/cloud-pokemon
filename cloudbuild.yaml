@@ -1,18 +1,16 @@
-steps:
-  # Clona el repositorio de GitHub que contiene el código del chart de Helm
-  - name: 'gcr.io/cloud-builders/git'
-    args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon.git', 'Banhendrick']
-  # Actualiza el despliegue de Nginx utilizando el chart de Helm
-  - name: 'gcr.io/cloud-builders/helm'
-    args: ['upgrade', 'pokemon', './nginx-chart', '--set', 'app', '--set', 'replicaCount=1', '--install']
-    env:
-      - 'HELM_HOME=/builder/home/.helm'
-      - 'KUBECONFIG=/workspace/.kube/config'
-  #Implementa la actualizacion en el cluster de GKE
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'deployments', 'create', 'cloudbuild-pokemon', '--config', 'cloudconfig.yaml']
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
 
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/helm:${_HELM_VERSION}', '--tag=gcr.io/$PROJECT_ID/helm:latest', '--build-arg', 'HELM_VERSION=v${_HELM_VERSION}', '.']
+# Sanity Check: make sure basic functionality works
+- name: 'gcr.io/$PROJECT_ID/helm:latest'
+  args: ['version', '--client']
+  env:
+    - SKIP_CLUSTER_CONFIG=true
+images:
+  - 'gcr.io/$PROJECT_ID/helm:${_HELM_VERSION}'
+  - 'gcr.io/$PROJECT_ID/helm:latest'
+tags: ['cloud-builders-community']
+substitutions:
+  _HELM_VERSION: 3.7.0
 
