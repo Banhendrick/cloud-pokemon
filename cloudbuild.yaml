@@ -1,38 +1,17 @@
 steps:
-# Build the Docker image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--tag=gcr.io/$PROJECT_ID/helm:${_HELM_VERSION}', '--tag=gcr.io/$PROJECT_ID/helm:latest', '--build-arg', 'HELM_VERSION=v${_HELM_VERSION}', '.' ]
-  #args: ['build', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:app', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA', '-t', 'gcr.io/$PROJECT_ID/pokemon-nginx:$BUILD_ID', '.']
-  id: 'build-image-helm'
-  waitFor: ['-']  # The '-' indicates that this step begins immediately.
+  # Clona el repositorio de GitHub que contiene el código del chart de Helm
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon', '.']
+  # Actualiza el despliegue de Nginx utilizando el chart de Helm
+  - name: 'gcr.io/cloud-builders/helm'
+    args: ['upgrade', 'pokemon', './nginx-chart', '--set', 'app', '--set', 'replicaCount=1', '--install']
+    env:
+      - 'HELM_HOME=/builder/home/.helm'
+      - 'KUBECONFIG=/workspace/.kube/config'
+  #Implementa la actualizacion en el cluster de GKE
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['beta', 'deployments', 'create', 'cloudbuild-pokemon', '--config', 'cloudconfig.yaml']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
 
-# Push the Docker image to Google Container Registry
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/helm']
-  id: 'push-image-to-container-registry'
-  waitFor: ['build-image-helm']
-
-# Deploy the Helm chart to GKE
-- name: 'gcr.io/$PROJECT_ID/helm:latest'
-  args: ['upgrade', '--install', 'filebeat', '--namespace', 'filebeat', 'stable/filebeat', '-f', 'nginx-chart/templates/values.yaml']
-  env:
-    - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
-  id: 'deploy-nginx-chart'
-  waitFor: ['push-image-to-container-registry']
-
-options:
-  logging: GCS_ONLY
-
-substitutions:
-  _HELM_VERSION: 3.7.0
-  _CLOUDSDK_COMPUTE_ZONE: europe-southwest1-a
-  _CLOUDSDK_CONTAINER_CLUSTER: gke-pokemon
-
-images:
-- 'gcr.io/$PROJECT_ID/helm:${_HELM_VERSION}'
-- 'gcr.io/$PROJECT_ID/helm:latest'
-#- 'gcr.io/$PROJECT_ID/pokemon-nginx:app'
-#- 'gcr.io/$PROJECT_ID/pokemon-nginx:$COMMIT_SHA'
-#- 'gcr.io/$PROJECT_ID/pokemon-nginx:$BUILD_ID'
-#asd
