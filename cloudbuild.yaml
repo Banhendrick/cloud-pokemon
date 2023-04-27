@@ -1,18 +1,12 @@
 steps:
-    # Instala el complemento gke-gcloud-auth-plugin
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'gcloud'
-    args:
-      - 'components'
-      - 'install'
-      - 'gke-gcloud-auth-plugin'
   # Configura la conexión de Kubernetes en Cloud Build
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        gcloud container clusters get-credentials gke-pokemon --zone=europe-southwest1-a --project=fc-labs-pro-lab2
+         gcloud auth activate-service-account --key-file=<(gcloud iam service-accounts keys list --iam-account=789404228835@cloudbuild.gserviceaccount.com --format='value(name)')
+        gcloud auth application-default login
   # Clona el repositorio de GitHub que contiene el código del chart de Helm
   - name: 'gcr.io/cloud-builders/git'
     id: 'Deploy'
