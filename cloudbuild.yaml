@@ -1,7 +1,7 @@
 steps:
   # Clona el repositorio de GitHub que contiene el código del chart de Helm
   - name: 'gcr.io/cloud-builders/git'
-    args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon.git', '.']
+    args: ['clone', '--single-branch', '--branch', 'main', 'https://github.com/Banhendrick/cloud-pokemon.git', 'Banhendrick']
   # Actualiza el despliegue de Nginx utilizando el chart de Helm
   - name: 'gcr.io/cloud-builders/helm'
     args: ['upgrade', 'pokemon', './nginx-chart', '--set', 'app', '--set', 'replicaCount=1', '--install']
