@@ -1,4 +1,11 @@
 steps:
+  # Configura la conexión de Kubernetes en Cloud Build
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud container clusters get-credentials gke-pokemon --zone=europe-southwest1 --project=fc-labs-pro-lab2
   # Clona el repositorio de GitHub que contiene el código del chart de Helm
   - name: 'gcr.io/cloud-builders/git'
     id: 'Deploy'
