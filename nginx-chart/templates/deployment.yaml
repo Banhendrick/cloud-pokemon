@@ -5,7 +5,7 @@ metadata:
   creationTimestamp: null
   name: pokemon-nginx
 spec:
-  replicas: {{.Values.replicaCount}}
+  replicas: '{{.Values.replicaCount}}'
   selector:
     matchLabels:
       io.kompose.service: nginx
