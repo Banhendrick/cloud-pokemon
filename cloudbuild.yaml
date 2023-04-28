@@ -30,6 +30,9 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
+    # Agrega la siguiente línea para anotar la configuración al hacer la actualización del Helm chart
+    annotations:
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":null,\"name\":\"pokemon-nginx\",\"namespace\":\"default\"},\"spec\":{\"replicas\":{{.Values.replicaCount}},\"selector\":{\"matchLabels\":{\"app\":\"nginx\"}},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"app\":\"nginx\"}},\"spec\":{\"containers\":[{\"image\":\"{{.Values.image.repository}}:{{.Values.image.tag}}\",\"name\":\"nginx-container\",\"ports\":[{\"containerPort\":{{.Values.container.port}},\"name\":\"http\"}],\"resources\":{}}],\"restartPolicy\":\"Always\"}}},\"status\":{}}"
 # Imágenes a ser creadas por la etapa de compilación
 images:
   - gcr.io/fc-labs-pro-lab2/pokemon-nginx:app

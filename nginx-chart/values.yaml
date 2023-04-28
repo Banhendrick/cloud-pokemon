@@ -10,6 +10,13 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "app"
 
+container:
+  name: nginx-container
+  port: 80
+  ports:
+    - name: http
+      containerPort: 80
+
 service:
   name: nginx-service
   type: LoadBalancer
@@ -22,5 +29,4 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-
 
