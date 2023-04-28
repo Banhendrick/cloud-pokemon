@@ -6,7 +6,7 @@ steps:
   # Sube la imagen de Nginx recién creada a Google Container Registry
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:$COMMIT_SHA']
-  - name: alpine/helm
+  - name: gcr.io/fc-labs-pro-lab2/helm:latest
     #entrypoint: /bin/sh
     args: ['upgrade', '--install', 'pokemon', 'nginx-chart', '--namespace', 'default', '--set', 'image.tag=$COMMIT_SHA']
     env:
