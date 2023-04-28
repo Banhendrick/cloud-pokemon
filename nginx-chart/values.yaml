@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: banhendrick/nginx-php-pokemon
+  repository: gcr.io/fc-labs-pro-lab2/pokemon-nginx
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "app"
