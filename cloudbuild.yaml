@@ -5,28 +5,28 @@ steps:
     args: ['submodule', 'update', '--init']
   # Compila la imagen Docker y la etiqueta con el valor $COMMIT_SHA
   - name: gcr.io/cloud-builders/docker
-    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app', '-f', 'Dockerfile', '.']
+    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:$COMMIT_SHA', '-f', 'Dockerfile', '.']
   # Sube la imagen de Nginx recién creada a Google Container Registry
   - name: gcr.io/cloud-builders/docker
-    args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app']
+    args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:$COMMIT_SHA']
   # Compila la imagen Docker de Helm
-  - name: gcr.io/cloud-builders/docker
-    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest', '-f', 'nginx-chart/Dockerfile', '.']
+  #- name: gcr.io/cloud-builders/docker
+  #  args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest', '-f', 'helm/Dockerfile', '.']
   # Sube la imagen de Helm recién creada a Google Container Registry
-  - name: gcr.io/cloud-builders/docker
-    args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest']
+  #- name: gcr.io/cloud-builders/docker
+  #  args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest']
   # Actualiza el helm release en su clúster de Kubernetes
-  - name: gcr.io/cloud-builders/kubectl
-    args:
-      - 'apply'
-      - '-f'
-      - 'nginx-chart/templates/deployment.yaml'
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
-  - name: gcr.io/fc-labs-pro-lab2/helm
+  #- name: gcr.io/cloud-builders/kubectl
+  #  args:
+  #    - 'apply'
+  #    - '-f'
+  #    - 'nginx-chart/templates/deployment.yaml'
+  #  env:
+  #    - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
+  #    - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
+  - name: alpine/helm
     #entrypoint: /bin/sh
-    args: ['helm upgrade pokemon nginx-chart --namespace default --set image.tag=app']
+    args: ['helm template pokemon nginx-chart --namespace default --set image.tag=$COMMIT_SHA']
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
