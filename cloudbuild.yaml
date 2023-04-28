@@ -25,7 +25,7 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
   - name: gcr.io/fc-labs-pro-lab2/helm
-    entrypoint: /bin/sh
+    #entrypoint: /bin/sh
     args: ['-c', 'helm upgrade pokemon nginx-chart --namespace default --set image.tag=app']
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
