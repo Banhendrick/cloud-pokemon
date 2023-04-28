@@ -14,14 +14,16 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-      # tiene que coincidir con el service
+        # tiene que coincidir con el service
         io.kompose.service: nginx
     spec:
       containers:
       - image: '{{.Values.image.repository}}:{{.Values.image.tag}}'
         name: nginx-container
         ports:
-      - containerPort: 80
+        - name: http
+          containerPort: 80
         resources: {}
       restartPolicy: Always
 status: {}
+
