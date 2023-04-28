@@ -10,11 +10,11 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app']
   # Compila la imagen Docker de Helm
-  - name: gcr.io/cloud-builders/docker
-    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest', '-f', 'helm/Dockerfile', '.']
+  #- name: gcr.io/cloud-builders/docker
+  #  args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest', '-f', 'helm/Dockerfile', '.']
   # Sube la imagen de Helm recién creada a Google Container Registry
-  - name: gcr.io/cloud-builders/docker
-    args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest']
+  #- name: gcr.io/cloud-builders/docker
+  #  args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest']
   # Actualiza el helm release en su clúster de Kubernetes
   - name: gcr.io/cloud-builders/kubectl
     args:
@@ -24,9 +24,14 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
-  - name: gcr.io/fc-labs-pro-lab2/helm
+  - name: gcr.io/cloud-builders/docker
+    args: ['run', '--rm', '-v', '$(pwd)/helm:/helm', 'alpine/helm:latest', 'helm', 'plugin', 'install', 'https://github.com/chartmuseum/helm-push']
+  - name: alpine/helm:latest
     entrypoint: /bin/sh
     args: ['-c', 'helm upgrade pokemon nginx-chart --namespace default --set image.tag=app']
+  #- name: gcr.io/fc-labs-pro-lab2/helm
+  #  entrypoint: /bin/sh
+  #  args: ['-c', 'helm upgrade pokemon nginx-chart --namespace default --set image.tag=app']
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
