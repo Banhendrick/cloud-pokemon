@@ -24,8 +24,6 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
-  - name: gcr.io/cloud-builders/docker
-    args: ['run', '--rm', '-v', '$(pwd)/helm:/helm', 'alpine/helm:latest', 'helm', 'plugin', 'install', 'https://github.com/chartmuseum/helm-push']
   - name: alpine/helm:latest
     entrypoint: /bin/sh
     args: ['-c', 'helm upgrade pokemon nginx-chart --namespace default --set image.tag=app']
