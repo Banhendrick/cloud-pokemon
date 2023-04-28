@@ -9,12 +9,10 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: nginx
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        # tiene que coincidir con el service
         io.kompose.service: nginx
     spec:
       containers:
@@ -25,6 +23,8 @@ spec:
           containerPort: 80
         resources: {}
       restartPolicy: Always
+  strategy: {}
 status: {}
+
 
 
