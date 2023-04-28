@@ -1,3 +1,3 @@
 FROM alpine/helm
 
-COPY ../nginx-chart .
+COPY cloud-pokemon/nginx-chart/ .
