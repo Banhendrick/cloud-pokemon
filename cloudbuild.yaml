@@ -11,7 +11,7 @@ steps:
     args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-nginx:app']
   # Compila la imagen Docker de Helm
   - name: gcr.io/cloud-builders/docker
-    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest', '-f', 'helm/Dockerfile', '.']
+    args: ['build', '-t', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest', '-f', 'nginx-chart/Dockerfile', '.']
   # Sube la imagen de Helm recién creada a Google Container Registry
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'gcr.io/fc-labs-pro-lab2/pokemon-helm:latest']
