@@ -1,3 +1,14 @@
+resource "google_storage_bucket_iam_member" "member" {
+  bucket = "artifacts.fc-labs-pro-lab2.appspot.com"
+  role = "roles/storage.objectViewer"
+  member = "serviceAccount:${var.gke_service_account}"
+}
+
+#resource "google_service_account" "service_account" {
+#  account_id   = "var.gke_service_account"
+#  isplay_name = "Service Account"
+#}
+
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = var.gcp_project_id
@@ -35,47 +46,4 @@ module "gke" {
       initial_node_count        = 1
     },
   ]
-
-  node_pools_oauth_scopes = {
-    all = [
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-    ]
-  }
-
-  node_pools_labels = {
-    all = {}
-
-    default-node-pool = {
-      default-node-pool = true
-    }
-  }
-
-  node_pools_metadata = {
-    all = {}
-
-    default-node-pool = {
-      node-pool-metadata-custom-value = "my-node-pool"
-    }
-  }
-
-  node_pools_taints = {
-    all = []
-
-    default-node-pool = [
-      {
-        key    = "default-node-pool"
-        value  = true
-        effect = "PREFER_NO_SCHEDULE"
-      },
-    ]
-  }
-
-  node_pools_tags = {
-    all = []
-
-    default-node-pool = [
-      "default-node-pool",
-    ]
-  }
 }

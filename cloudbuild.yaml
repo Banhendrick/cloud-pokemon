@@ -13,5 +13,3 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-southwest1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-pokemon'
 # Imágenes a ser creadas por la etapa de compilación
-
-
