@@ -1,5 +1,3 @@
-ARG IMAGE_BASE=base
-
 FROM alpine:latest AS base
 
 WORKDIR /code

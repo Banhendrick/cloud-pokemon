@@ -1,14 +1,9 @@
-# Default values for nginx-chart.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
 
 image:
   #si hago helm install manual cambiar por repo de dockerhub
   repository: gcr.io/fc-labs-pro-lab2/pokemon-nginx
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
   tag: "app"
 
 container:
@@ -29,4 +24,3 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
