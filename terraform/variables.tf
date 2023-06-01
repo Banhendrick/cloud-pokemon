@@ -50,5 +50,5 @@ variable "gke_default_nodepool_name" {
 variable "gke_service_account" {
     type = string
     description = "GKE service account"
-    default = "tf-gke-gke-pokemon-jov5@fc-labs-pro-lab2.iam.gserviceaccount.com"
+    default = "tf-gke-gke-pokemon-yawm@fc-labs-pro-lab2.iam.gserviceaccount.com"
 }
