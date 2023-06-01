@@ -3,7 +3,6 @@ replicaCount: 1
 image:
   #si hago helm install manual cambiar por repo de dockerhub
   repository: gcr.io/fc-labs-pro-lab2/pokemon-nginx
-  #repository: banhendrick/nginx-php-pokemon:app
   pullPolicy: Always
   tag: "app"
 
